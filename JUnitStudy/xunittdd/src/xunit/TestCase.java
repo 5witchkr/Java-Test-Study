@@ -11,6 +11,7 @@ public class TestCase {
     }
 
     public void run() {
+        //선실행
         setUp();
         
         try {

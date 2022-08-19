@@ -7,15 +7,21 @@ public class TestCaseTest extends TestCase{
         super(name);
     }
 
+    //refactor
+
+    WasRun wasRun;
+    @Override
+    public void setUp() {
+        wasRun = new WasRun("testMethod");
+    }
+
    public void testRunning() {
-        WasRun wasRun = new WasRun("testMethod");
         Assert.assertEquals(false, wasRun.wasRun);
         wasRun.run();
         Assert.assertEquals(true, wasRun.wasRun);
     }
 
     public void testSetUp() {
-        WasRun wasRun = new WasRun("testMethod");
         Assert.assertEquals(false, wasRun.wasSetUp);
         wasRun.run();
         Assert.assertEquals(true, wasRun.wasSetUp);
