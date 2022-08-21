@@ -6,9 +6,7 @@ public class TestCaseTest extends TestCase{
     public TestCaseTest(String name) {
         super(name);
     }
-
     //refactor
-
     WasRun wasRun;
     @Override
     public void setUp() {
@@ -17,6 +15,6 @@ public class TestCaseTest extends TestCase{
 
    public void testTemplateMethod() {
         wasRun.run();
-        Assert.assertEquals("setUp testMethod", wasRun.log);
+        Assert.assertEquals("setUp testMethod tearDown", wasRun.log);
     }
 }
