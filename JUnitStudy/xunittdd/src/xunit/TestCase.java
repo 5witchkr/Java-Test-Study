@@ -21,7 +21,6 @@ public class TestCase {
             throw new RuntimeException(e);
         }
     }
-
     public void setUp() {
     }
 }
