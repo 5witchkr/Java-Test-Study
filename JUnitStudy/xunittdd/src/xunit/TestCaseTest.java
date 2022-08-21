@@ -15,18 +15,10 @@ public class TestCaseTest extends TestCase{
         wasRun = new WasRun("testMethod");
     }
 
-   public void testRunning() {
+   public void testTemplateMethod() {
         Assert.assertEquals(false, wasRun.wasRun);
         wasRun.run();
         Assert.assertEquals("setUp testMethod", wasRun.log);
         Assert.assertEquals(true, wasRun.wasRun);
-    }
-
-    public void testSetUp() {
-        Assert.assertEquals(false, wasRun.wasSetUp);
-        wasRun.run();
-        //setUp 순서
-        Assert.assertEquals("setUp testMethod", wasRun.log);
-        Assert.assertEquals(true, wasRun.wasSetUp);
     }
 }
