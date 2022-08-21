@@ -10,7 +10,10 @@ public abstract class TestCase {
         this.name = name;
     }
 
-    public void run() {
+    public TestResult run() {
+        TestResult result = new TestResult();
+        result.testStarted();
+
         //선실행
         setUp();
         
@@ -22,6 +25,7 @@ public abstract class TestCase {
         }
 
         tearDown();
+        return result;
     }
 
     public void tearDown() {
