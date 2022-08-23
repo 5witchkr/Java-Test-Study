@@ -2,18 +2,21 @@ package xunit;
 
 public class XUnitTest {
     public static void main(String[] args) {
-        TestResult result = new TestResult();
+        TestSuite suite = new TestSuite();
         //테스트 메소드 실행
-        new TestCaseTest("testTemplateMethod").run(result);
+        suite.add(new TestCaseTest("testTemplateMethod"));
         //result 테스트 실행
-        new TestCaseTest("testResult").run(result);
+        suite.add(new TestCaseTest("testResult"));
         //failed result formmating test
-        new TestCaseTest("testFailedResultFormatting").run(result);
+        suite.add(new TestCaseTest("testFailedResultFormatting"));
         //failed result test
-        new TestCaseTest("testFailedResult").run(result);
-        //
-        new TestCaseTest("testSuite").run(result);
-
+        suite.add(new TestCaseTest("testFailedResult"));
+        //suite
+        suite.add(new TestCaseTest("testSuite"));
+        //run
+        TestResult result = new TestResult();
+        suite.run(result);
+        //out
         System.out.println(result.getSummary());
     }
 }
