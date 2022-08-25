@@ -18,8 +18,9 @@ public class Dispatch {
     }
     public static void main(String[] arg){
         Service svc = new RunService();
-        //컴파일을 하더라도 결정되지않음 (런타임시 구조 obj - obj)
-        svc.run();
+        //svc.runt()은 컴파일시점에서는 결정되지않음 (런타임시 결정 obj - obj)
+        //dynamicDispatch
+        svc.run(); //receiver parameter 가 new *Service 를 결정
     }
 
 }
