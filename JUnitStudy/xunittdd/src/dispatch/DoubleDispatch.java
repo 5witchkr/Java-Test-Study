@@ -24,11 +24,11 @@ public class DoubleDispatch {
     static class Facebook implements SNS{
         @Override
         public void post(Text post) {
-            System.out.println("text-twitter");
+            System.out.println("text-facebook");
         }
         @Override
         public void post(Picture post) {
-            System.out.println("picture-twitter");
+            System.out.println("picture-facebook");
         }
     };
     static class Twitter implements SNS{
@@ -41,13 +41,22 @@ public class DoubleDispatch {
             System.out.println("picture-twitter");
         }
     };
+    static class Line implements SNS{
+        @Override
+        public void post(Text post) {
+            System.out.println("text-line");
+        }
+        @Override
+        public void post(Picture post) {
+            System.out.println("picture-line");
+        }
+    };
 
     public static void main(String[] args){
         List<Post> posts = Arrays.asList(new Text(), new Picture());
-        List<SNS> sns = Arrays.asList(new Facebook(), new Twitter());
+        List<SNS> sns = Arrays.asList(new Facebook(), new Twitter(), new Line());
 
         posts.forEach(p -> sns.forEach(p::postOn));
     }
 }
 
-//Handling Multiple Polymorphism
