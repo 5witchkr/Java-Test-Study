@@ -6,28 +6,41 @@ import java.util.List;
 public class DoubleDispatch {
     interface Post {void postOn(SNS sns);}
     static class Text implements Post{
+        @Override
         public void postOn(SNS sns) {
-            if (sns instanceof Facebook) {
-                System.out.println(" text - facebook");
-            }
-            if (sns instanceof Twitter) {
-                System.out.println(" text - twitter");
-            }
+            sns.post(this);
         }
     }
     static class Picture implements Post{
+        @Override
         public void postOn(SNS sns) {
-            if (sns instanceof Facebook) {
-                System.out.println(" picture - facebook");
-            }
-            if (sns instanceof Twitter) {
-                System.out.println(" picture - twitter");
-            }
+            sns.post(this);
         }
     }
-    interface SNS {}
-    static class Facebook implements SNS{};
-    static class Twitter implements SNS{};
+    interface SNS {
+        void post(Text post);
+        void post(Picture post);
+    }
+    static class Facebook implements SNS{
+        @Override
+        public void post(Text post) {
+            System.out.println("text-twitter");
+        }
+        @Override
+        public void post(Picture post) {
+            System.out.println("picture-twitter");
+        }
+    };
+    static class Twitter implements SNS{
+        @Override
+        public void post(Text post) {
+            System.out.println("text-twitter");
+        }
+        @Override
+        public void post(Picture post) {
+            System.out.println("picture-twitter");
+        }
+    };
 
     public static void main(String[] args){
         List<Post> posts = Arrays.asList(new Text(), new Picture());
@@ -36,3 +49,5 @@ public class DoubleDispatch {
         posts.forEach(p -> sns.forEach(p::postOn));
     }
 }
+
+//Handling Multiple Polymorphism
