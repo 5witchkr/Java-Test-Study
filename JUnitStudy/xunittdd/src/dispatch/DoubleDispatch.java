@@ -7,12 +7,22 @@ public class DoubleDispatch {
     interface Post {void postOn(SNS sns);}
     static class Text implements Post{
         public void postOn(SNS sns) {
-            System.out.println("text -> "+sns.getClass().getSimpleName());
+            if (sns instanceof Facebook) {
+                System.out.println(" text - facebook");
+            }
+            if (sns instanceof Twitter) {
+                System.out.println(" text - twitter");
+            }
         }
     }
     static class Picture implements Post{
         public void postOn(SNS sns) {
-            System.out.println("picture -> " +sns.getClass().getSimpleName());
+            if (sns instanceof Facebook) {
+                System.out.println(" picture - facebook");
+            }
+            if (sns instanceof Twitter) {
+                System.out.println(" picture - twitter");
+            }
         }
     }
     interface SNS {}
