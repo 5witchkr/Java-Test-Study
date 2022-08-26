@@ -1,5 +1,9 @@
 package dispatch;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Dispatch {
     static abstract class Service {
         abstract void run();
@@ -13,14 +17,11 @@ public class Dispatch {
     static class RunnerService extends Service {
         @Override
         void run() {
-            System.out.println("runt2");
+            System.out.println("run2");
         }
     }
     public static void main(String[] arg){
-        Service svc = new RunService();
-        //svc.runt()은 컴파일시점에서는 결정되지않음 (런타임시 결정 obj - obj)
-        //dynamicDispatch
-        svc.run(); //receiver parameter 가 new *Service 를 결정
+        List<Service> svc = Arrays.asList(new RunService(), new RunnerService());
+        svc.forEach(Service::run);
     }
-
 }
