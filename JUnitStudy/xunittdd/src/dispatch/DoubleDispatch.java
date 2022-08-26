@@ -56,6 +56,12 @@ public class DoubleDispatch {
         List<Post> posts = Arrays.asList(new Text(), new Picture());
         List<SNS> sns = Arrays.asList(new Facebook(), new Twitter(), new Line());
 
+        //other
+        //case -> repository.findxxx() ??
+        //proxy type
+        //use -> Proxy Visitor Pattern
+        //visitor pattern -> deep check
+
         posts.forEach(p -> sns.forEach(p::postOn));
     }
 }
