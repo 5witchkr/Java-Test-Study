@@ -10,7 +10,10 @@ public class SuperTypeToken {
     static class Sub extends Sup<String>{} //not eraser Type
 
     public static void main(String[] args) throws NoSuchFieldException{
+        //eraser
         Sup<String> s = new Sup<>();
+
+        //not eraser (runtime type safe)
         Sub b = new Sub();
         Type t = b.getClass().getGenericSuperclass();
         ParameterizedType ptype = (ParameterizedType) t;
