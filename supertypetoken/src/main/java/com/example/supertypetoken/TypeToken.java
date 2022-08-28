@@ -15,9 +15,6 @@ public class TypeToken {
             return clazz.cast(map.get(clazz));
         }
     }
-
-    //type Token
-
     public static void main(String[] args) throws Exception {
         TypesafeMap m = new TypesafeMap();
         m.put(Integer.class, 1);
