@@ -1,0 +1,13 @@
+package com.example.supertypetoken;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SupertypetokenApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SupertypetokenApplication.class, args);
+	}
+
+}
