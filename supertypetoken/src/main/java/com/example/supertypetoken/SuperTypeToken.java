@@ -14,7 +14,7 @@ public class SuperTypeToken {
             map.put(tr, value);
         }
         <T> T get(TypeReference<T> tr) {
-            return ((Class<T>)tr.type).cast(map.get(tr.type));
+            return ((Class<T>)tr.type).cast(map.get(tr));
         }
     }
     static class TypeReference<T>{
@@ -30,7 +30,7 @@ public class SuperTypeToken {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (o == null || getClass().getSuperclass() != o.getClass().getSuperclass()) return false;
 
             TypeReference<?> that = (TypeReference<?>) o;
 
