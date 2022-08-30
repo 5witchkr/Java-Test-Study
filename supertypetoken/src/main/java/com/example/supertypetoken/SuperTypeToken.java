@@ -14,7 +14,10 @@ public class SuperTypeToken {
             map.put(tr, value);
         }
         <T> T get(TypeReference<T> tr) {
-            return ((Class<T>)tr.type).cast(map.get(tr));
+            if(tr.type instanceof Class<?>)
+                return ((Class<T>)tr.type).cast(map.get(tr));//ex TypeReference<String>
+            else
+                return ((Class<T>)((ParameterizedType)tr.type).getRawType()).cast(map.get(tr));//ex TypeReference<List<String>>
         }
     }
     static class TypeReference<T>{
