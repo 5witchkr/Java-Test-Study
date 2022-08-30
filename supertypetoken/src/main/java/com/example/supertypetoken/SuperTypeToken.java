@@ -49,9 +49,13 @@ public class SuperTypeToken {
         m.put(new TypeReference<Integer>(){}, 1);
         m.put(new TypeReference<String>(){}, "String");
         m.put(new TypeReference<List>(){}, Arrays.asList(1,2,3));
+        m.put(new TypeReference<List<Integer>>(){}, Arrays.asList(1,2,3));
+        m.put(new TypeReference<List<String>>(){}, Arrays.asList("a","b","c"));
 
         System.out.println(m.get(new TypeReference<Integer>(){}));
         System.out.println(m.get(new TypeReference<String>(){}));
         System.out.println(m.get(new TypeReference<List>(){}));
+        System.out.println(m.get(new TypeReference<List<Integer>>(){}));
+        System.out.println(m.get(new TypeReference<List<String>>(){}));
     }
 }
