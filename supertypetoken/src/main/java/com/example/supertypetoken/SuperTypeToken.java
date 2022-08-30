@@ -17,15 +17,26 @@ public class SuperTypeToken {
             return clazz.cast(map.get(clazz));
         }
     }
-
+    static class TypeReference<T>{
+        Type type;
+        public TypeReference(){
+            Type stype = getClass().getGenericSuperclass();
+            if (stype instanceof ParameterizedType) {
+                this.type = ((ParameterizedType)stype).getActualTypeArguments()[0];
+            }
+            else throw new RuntimeException();
+        }
+    }
     public static void main(String[] args) throws Exception{
-        TypesafeMap m = new TypesafeMap();
-        m.put(Integer.class, 1);
-        m.put(String.class, "String");
-        m.put(List.class, Arrays.asList(1,2,3));
-
-        System.out.println(m.get(Integer.class));
-        System.out.println(m.get(String.class));
-        System.out.println(m.get(List.class));
+        TypeReference t = new TypeReference<String>() {};
+        System.out.println(t.type);
+//        TypesafeMap m = new TypesafeMap();
+//        m.put(Integer.class, 1);
+//        m.put(String.class, "String");
+//        m.put(List.class, Arrays.asList(1,2,3));
+//
+//        System.out.println(m.get(Integer.class));
+//        System.out.println(m.get(String.class));
+//        System.out.println(m.get(List.class));
     }
 }
