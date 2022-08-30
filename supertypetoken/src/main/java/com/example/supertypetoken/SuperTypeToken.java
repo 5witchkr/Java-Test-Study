@@ -9,12 +9,12 @@ import java.util.Map;
 
 public class SuperTypeToken {
     static class TypesafeMap {
-        Map<Class<?>, Object> map = new HashMap<>();
-        <T> void put(Class<T> clazz, T value){
-            map.put(clazz, value);
+        Map<TypeReference<?>, Object> map = new HashMap<>();
+        <T> void put(TypeReference<T> tr, T value){
+            map.put(tr, value);
         }
-        <T> T get(Class<T> clazz) {
-            return clazz.cast(map.get(clazz));
+        <T> T get(TypeReference<T> tr) {
+            return ((Class<T>)tr.type).cast(map.get(tr.type));
         }
     }
     static class TypeReference<T>{
@@ -26,17 +26,32 @@ public class SuperTypeToken {
             }
             else throw new RuntimeException();
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TypeReference<?> that = (TypeReference<?>) o;
+
+            return type.equals(that.type);
+        }
+
+        @Override
+        public int hashCode() {
+            return type.hashCode();
+        }
     }
     public static void main(String[] args) throws Exception{
         TypeReference t = new TypeReference<String>() {};
         System.out.println(t.type);
-//        TypesafeMap m = new TypesafeMap();
-//        m.put(Integer.class, 1);
-//        m.put(String.class, "String");
-//        m.put(List.class, Arrays.asList(1,2,3));
-//
-//        System.out.println(m.get(Integer.class));
-//        System.out.println(m.get(String.class));
-//        System.out.println(m.get(List.class));
+        TypesafeMap m = new TypesafeMap();
+        m.put(new TypeReference<Integer>(){}, 1);
+        m.put(new TypeReference<String>(){}, "String");
+        m.put(new TypeReference<List>(){}, Arrays.asList(1,2,3));
+
+        System.out.println(m.get(new TypeReference<Integer>(){}));
+        System.out.println(m.get(new TypeReference<String>(){}));
+        System.out.println(m.get(new TypeReference<List>(){}));
     }
 }
