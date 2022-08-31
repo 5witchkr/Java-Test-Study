@@ -18,7 +18,7 @@ public class SpringTypeRefRestTemplate {
 //        //NON TypeSafe
 //        List<Map> musers = rt.getForObject("http://localhost:8080", List.class);
 //        System.out.println(musers.get(0).get("name"));
-        
+
         //TypeSafe with TypeReference
         List<User> user = rt.exchange("http://localhost:8080",
                 HttpMethod.GET, null, new ParameterizedTypeReference<List<User>>() {}).getBody();

@@ -2,6 +2,7 @@ package com.example.supertypetoken;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +14,16 @@ public class SupertypetokenApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SupertypetokenApplication.class, args);
+	}
+
+	static class GenericService<T> {
+		T t;
+	}
+	@Component
+	static class MyService extends GenericService<String> {
+	}
+	@Component
+	static class MyService2 extends GenericService<Integer>{
 	}
 
 	@RestController
@@ -29,9 +40,11 @@ public class SupertypetokenApplication {
 		public User(String name) {
 			this.name = name;
 		}
-		public User(){
+
+		public User() {
 		}
-		public String getName(){
+
+		public String getName() {
 			return name;
 		}
 
@@ -42,5 +55,4 @@ public class SupertypetokenApplication {
 					'}';
 		}
 	}
-
 }
