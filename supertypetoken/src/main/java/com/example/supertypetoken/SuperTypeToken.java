@@ -1,11 +1,10 @@
 package com.example.supertypetoken;
 
+import org.springframework.core.ResolvableType;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SuperTypeToken {
     static class TypesafeMap {
@@ -57,5 +56,17 @@ public class SuperTypeToken {
         System.out.println(m.get(new TypeReference<List<String>>(){}));
         System.out.println(m.get(new TypeReference<List<List<String>>>(){}));
         System.out.println(m.get(new TypeReference<Map<String, String>>(){}));
+
+        //중첩체크
+        ResolvableType rt = ResolvableType.forInstance(new TypeReference<List<List<String>>>(){});
+        System.out.println(rt.getSuperType().getGeneric(0).getType());
+        System.out.println(rt.getSuperType().getGeneric(0).getNested(2).getType());
+        System.out.println(rt.getSuperType().getGeneric(0).getNested(3).getType());
+
+        //known
+        System.out.println(rt.getSuperType().hasGenerics());
+        System.out.println(rt.getSuperType().hasUnresolvableGenerics());
+        //unknown
+        System.out.println(ResolvableType.forInstance(new ArrayList<String>()).hasUnresolvableGenerics());
     }
 }
