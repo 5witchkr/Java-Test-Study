@@ -45,6 +45,10 @@ public class SuperTypeToken {
         m.put(new TypeReference<List<List<String>>>(){}, Arrays.asList(
                 Arrays.asList("a", "b"), Arrays.asList("c", "d"), Arrays.asList("e","f")
         ));
+        Map<String, String> map = new HashMap<>();
+        map.put("key1","val1");
+        map.put("key2","val2");
+        m.put(new TypeReference<Map<String, String>>(){}, map);
 
         System.out.println(m.get(new TypeReference<Integer>(){}));
         System.out.println(m.get(new TypeReference<String>(){}));
@@ -52,5 +56,6 @@ public class SuperTypeToken {
         System.out.println(m.get(new TypeReference<List<Integer>>(){}));
         System.out.println(m.get(new TypeReference<List<String>>(){}));
         System.out.println(m.get(new TypeReference<List<List<String>>>(){}));
+        System.out.println(m.get(new TypeReference<Map<String, String>>(){}));
     }
 }
