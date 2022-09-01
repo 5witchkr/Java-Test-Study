@@ -9,15 +9,15 @@ import java.util.Map;
 
 public class SuperTypeToken {
     static class TypesafeMap {
-        Map<TypeReference<?>, Object> map = new HashMap<>();
+        Map<Type, Object> map = new HashMap<>();
         <T> void put(TypeReference<T> tr, T value){
-            map.put(tr, value);
+            map.put(tr.type, value);
         }
         <T> T get(TypeReference<T> tr) {
             if(tr.type instanceof Class<?>)
-                return ((Class<T>)tr.type).cast(map.get(tr));//ex TypeReference<String>
+                return ((Class<T>)tr.type).cast(map.get(tr.type));//ex TypeReference<String>
             else
-                return ((Class<T>)((ParameterizedType)tr.type).getRawType()).cast(map.get(tr));//ex TypeReference<List<String>>
+                return ((Class<T>)((ParameterizedType)tr.type).getRawType()).cast(map.get(tr.type));//ex TypeReference<List<String>>
         }
     }
     static class TypeReference<T>{
@@ -31,34 +31,26 @@ public class SuperTypeToken {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass().getSuperclass() != o.getClass().getSuperclass()) return false;
-
-            TypeReference<?> that = (TypeReference<?>) o;
-
-            return type.equals(that.type);
-        }
-
-        @Override
         public int hashCode() {
             return type.hashCode();
         }
     }
     public static void main(String[] args) throws Exception{
-        TypeReference t = new TypeReference<String>() {};
-        System.out.println(t.type);
         TypesafeMap m = new TypesafeMap();
         m.put(new TypeReference<Integer>(){}, 1);
         m.put(new TypeReference<String>(){}, "String");
         m.put(new TypeReference<List>(){}, Arrays.asList(1,2,3));
         m.put(new TypeReference<List<Integer>>(){}, Arrays.asList(1,2,3));
         m.put(new TypeReference<List<String>>(){}, Arrays.asList("a","b","c"));
+        m.put(new TypeReference<List<List<String>>>(){}, Arrays.asList(
+                Arrays.asList("a", "b"), Arrays.asList("c", "d"), Arrays.asList("e","f")
+        ));
 
         System.out.println(m.get(new TypeReference<Integer>(){}));
         System.out.println(m.get(new TypeReference<String>(){}));
         System.out.println(m.get(new TypeReference<List>(){}));
         System.out.println(m.get(new TypeReference<List<Integer>>(){}));
         System.out.println(m.get(new TypeReference<List<String>>(){}));
+        System.out.println(m.get(new TypeReference<List<List<String>>>(){}));
     }
 }
