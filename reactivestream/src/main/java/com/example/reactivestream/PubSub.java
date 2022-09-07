@@ -1,6 +1,7 @@
 package com.example.reactivestream;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.Flow.Publisher;
 import java.util.concurrent.Flow;
@@ -13,10 +14,22 @@ public class PubSub {
         Publisher p = new Publisher() {
           @Override
           public void subscribe(Subscriber subscriber){
+              Iterator<Integer> it = itr.iterator();
               subscriber.onSubscribe(new Subscription() {
                   @Override
                   public void request(long n) {
-
+                      try {
+                          while (n-- > 0){
+                              if (it.hasNext()){
+                                  subscriber.onNext(it.next());
+                              } else {
+                                  subscriber.onComplete();
+                                  break;
+                              }
+                          }
+                      } catch (RuntimeException e){
+                          subscriber.onError(e);
+                      }
                   }
 
                   @Override
@@ -27,24 +40,28 @@ public class PubSub {
           }
         };
         Subscriber<Integer> s = new Subscriber<Integer>() {
+            Subscription subscription;
             @Override//need
             public void onSubscribe(Subscription subscription) {
-
+                System.out.println("onSubscribe");
+                this.subscription = subscription;
+                this.subscription.request(2);
             }
 
             @Override//optional
             public void onNext(Integer item) {
-
+                System.out.println("onNext " + item);
+                this.subscription.request(1);
             }
 
             @Override//optional
             public void onError(Throwable throwable) {
-
+                System.out.println("onError");
             }
 
             @Override//optional
             public void onComplete() {
-
+                System.out.println("onComplete");
             }
         };
 
