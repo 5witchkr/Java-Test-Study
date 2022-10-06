@@ -29,17 +29,12 @@ public class PubSubOperators {
     }
 
     private static Publisher<Integer> mapPub(Publisher<Integer> pub, Function<Integer, Integer> fun) {
-        return new Publisher<Integer>() {
+        return sub -> pub.subscribe(new DelegateSub(sub){
             @Override
-            public void subscribe(Subscriber<? super Integer> sub) {
-                pub.subscribe(new DelegateSub(sub){
-                    @Override
-                    public void onNext(Integer i){
-                        sub.onNext(fun.apply(i));
-                    }
-                });
+            public void onNext(Integer i){
+                sub.onNext(fun.apply(i));
             }
-        };
+        });
     }
 
     private static Subscriber<Integer> logSub() {
@@ -68,26 +63,21 @@ public class PubSubOperators {
     }
 
     private static Publisher<Integer> iterPub(List<Integer> iterable) {
-        return new Publisher<Integer>() {
+        return sub -> sub.onSubscribe(new Subscription() {
             @Override
-            public void subscribe(Subscriber<? super Integer> sub) {
-                sub.onSubscribe(new Subscription() {
-                    @Override
-                    public void request(long n) {
-                        try {
-                            iterable.forEach(s -> sub.onNext(s));
-                            sub.onComplete();
-                        } catch (Throwable t) {
-                            sub.onError(t);
-                        }
-                    }
-
-                    @Override
-                    public void cancel() {
-
-                    }
-                });
+            public void request(long n) {
+                try {
+                    iterable.forEach(s -> sub.onNext(s));
+                    sub.onComplete();
+                } catch (Throwable t) {
+                    sub.onError(t);
+                }
             }
-        };
+
+            @Override
+            public void cancel() {
+
+            }
+        });
     }
 }
