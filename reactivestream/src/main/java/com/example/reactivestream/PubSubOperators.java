@@ -19,6 +19,7 @@ import java.util.stream.Stream;
  * 3. reduce
  * 4. genericType
  * 5. T -> R type
+ * 6. reduce genericType
  */
 @Slf4j
 public class PubSubOperators {
@@ -36,11 +37,32 @@ public class PubSubOperators {
 
 //        Publisher<Integer> mapGenPub = mapGenPub(map2Pub, s-> s*3 );
 
-        Publisher<String> mapGen2Pub = mapGen2Pub(map2Pub, s -> "[" + s +"]");
+//        Publisher<String> mapGen2Pub = mapGen2Pub(map2Pub, s -> "[" + s +"]");
+
+        Publisher<String> reduceGenPub = reduceGenPub(map2Pub, "", (a, b) -> a + "&" + b);
 
 //        mapGenPub.subscribe(logSub());
 //        mapGenPub.subscribe(logGenSub());
-        mapGen2Pub.subscribe(logGenSub());
+//        mapGen2Pub.subscribe(logGenSub());
+        reduceGenPub.subscribe(logGenSub());
+    }
+
+
+    private static Publisher<String> reduceGenPub(Publisher<Integer> pub, String init,
+                                                  BiFunction<String, Integer, String> bf) {
+        return sub -> pub.subscribe(new DelegateGen2Sub<Integer,String>(sub){
+            String result = init;
+            @Override
+            public void onNext(Integer i){
+                result = bf.apply(result, i);
+            }
+
+            @Override
+            public void onComplete(){
+                sub.onNext(result);
+                sub.onComplete();
+            }
+        });
     }
 
 //    private static <T> Publisher<T> mapGenPub(Publisher<T> pub, Function<T, T> f){
