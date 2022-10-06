@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * flow: Publisher -> [Data1] -> Operator1 -> [Data2] -> Operator2 -> [Data3] -> Subscriber
+ */
 @Slf4j
 public class PubSubOperators {
     public static void main(String[] args) {
