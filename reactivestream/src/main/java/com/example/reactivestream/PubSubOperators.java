@@ -5,35 +5,15 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
 public class PubSubOperators {
     public static void main(String[] args) {
-        Publisher<Integer> pub = new Publisher<Integer>() {
-            Iterable<Integer> iterable = Stream.iterate(1, a -> a+1).limit(10)
-                    .collect(Collectors.toList());
-            @Override
-            public void subscribe(Subscriber<? super Integer> sub) {
-                sub.onSubscribe(new Subscription() {
-                    @Override
-                    public void request(long n) {
-                        try {
-                            iterable.forEach(s -> sub.onNext(s));
-                            sub.onComplete();
-                        } catch (Throwable t){
-                            sub.onError(t);
-                        }
-                    }
-
-                    @Override
-                    public void cancel() {
-
-                    }
-                });
-            }
-        };
+        Publisher<Integer> pub = iterPub(Stream.iterate(1, a -> a + 1).limit(10)
+                .collect(Collectors.toList()));
 
         Subscriber<Integer> subscriber = new Subscriber<Integer>() {
             @Override
@@ -59,5 +39,29 @@ public class PubSubOperators {
         };
 
         pub.subscribe(subscriber);
+    }
+
+    private static Publisher<Integer> iterPub(List<Integer> iterable) {
+        return new Publisher<Integer>() {
+            @Override
+            public void subscribe(Subscriber<? super Integer> sub) {
+                sub.onSubscribe(new Subscription() {
+                    @Override
+                    public void request(long n) {
+                        try {
+                            iterable.forEach(s -> sub.onNext(s));
+                            sub.onComplete();
+                        } catch (Throwable t) {
+                            sub.onError(t);
+                        }
+                    }
+
+                    @Override
+                    public void cancel() {
+
+                    }
+                });
+            }
+        };
     }
 }
