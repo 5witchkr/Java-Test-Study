@@ -15,7 +15,13 @@ public class PubSubOperators {
         Publisher<Integer> pub = iterPub(Stream.iterate(1, a -> a + 1).limit(10)
                 .collect(Collectors.toList()));
 
-        Subscriber<Integer> subscriber = new Subscriber<Integer>() {
+        Subscriber<Integer> subscriber = logSub();
+
+        pub.subscribe(subscriber);
+    }
+
+    private static Subscriber<Integer> logSub() {
+        return new Subscriber<Integer>() {
             @Override
             public void onSubscribe(Subscription s) {
                 log.debug("onSubscribe:");
@@ -37,8 +43,6 @@ public class PubSubOperators {
                 log.debug("onComplete");
             }
         };
-
-        pub.subscribe(subscriber);
     }
 
     private static Publisher<Integer> iterPub(List<Integer> iterable) {
