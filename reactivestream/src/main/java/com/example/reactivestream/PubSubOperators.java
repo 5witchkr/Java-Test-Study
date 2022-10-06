@@ -39,7 +39,9 @@ public class PubSubOperators {
 
 //        Publisher<String> mapGen2Pub = mapGen2Pub(map2Pub, s -> "[" + s +"]");
 
-        Publisher<String> reduceGenPub = reduceGenPub(map2Pub, "", (a, b) -> a + "&" + b);
+//        Publisher<String> reduceGenPub = reduceGenPub(map2Pub, "", (a, b) -> a + "&" + b);
+
+        Publisher<StringBuilder> reduceGenPub = reduceGenPub(map2Pub, new StringBuilder(), (a, b) -> a.append(b+","));
 
 //        mapGenPub.subscribe(logSub());
 //        mapGenPub.subscribe(logGenSub());
