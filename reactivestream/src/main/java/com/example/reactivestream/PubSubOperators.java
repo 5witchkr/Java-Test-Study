@@ -23,7 +23,9 @@ public class PubSubOperators {
 
         Publisher<Integer> mapPub = mapPub(pub, (Function<Integer, Integer>) s -> s * 10);
 
-        mapPub.subscribe(logSub());
+        Publisher<Integer> map2Pub = mapPub(mapPub, (Function<Integer, Integer>) s -> -s);
+
+        map2Pub.subscribe(logSub());
     }
 
     private static Publisher<Integer> mapPub(Publisher<Integer> pub, Function<Integer, Integer> fun) {
