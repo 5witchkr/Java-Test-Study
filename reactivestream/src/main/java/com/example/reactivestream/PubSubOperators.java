@@ -26,7 +26,7 @@ public class PubSubOperators {
         mapPub.subscribe(logSub());
     }
 
-    private static Publisher<Integer> mapPub(Publisher<Integer> pub, Function<Integer, Integer> f) {
+    private static Publisher<Integer> mapPub(Publisher<Integer> pub, Function<Integer, Integer> fun) {
         return new Publisher<Integer>() {
             @Override
             public void subscribe(Subscriber<? super Integer> sub) {
@@ -38,7 +38,7 @@ public class PubSubOperators {
 
                     @Override
                     public void onNext(Integer integer) {
-                        sub.onNext(integer);
+                        sub.onNext(fun.apply(integer));
                     }
 
                     @Override
