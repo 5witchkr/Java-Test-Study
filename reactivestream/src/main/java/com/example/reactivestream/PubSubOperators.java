@@ -18,6 +18,7 @@ import java.util.stream.Stream;
  * 2. sum
  * 3. reduce
  * 4. genericType
+ * 5. T -> R type
  */
 @Slf4j
 public class PubSubOperators {
@@ -33,17 +34,34 @@ public class PubSubOperators {
 
 //        Publisher<Integer> reducePub = reducePub(map2Pub, 0, (BiFunction<Integer, Integer, Integer>)(a, b) -> a+b);
 
-        Publisher<Integer> mapGenPub = mapGenPub(map2Pub, s-> s*3 );
+//        Publisher<Integer> mapGenPub = mapGenPub(map2Pub, s-> s*3 );
+
+        Publisher<String> mapGen2Pub = mapGen2Pub(map2Pub, s -> "[" + s +"]");
 
 //        mapGenPub.subscribe(logSub());
-        mapGenPub.subscribe(logGenSub());
+//        mapGenPub.subscribe(logGenSub());
+        mapGen2Pub.subscribe(logGenSub());
     }
 
-    private static <T> Publisher<T> mapGenPub(Publisher<T> pub, Function<T, T> f){
-        return new Publisher<T>() {
+//    private static <T> Publisher<T> mapGenPub(Publisher<T> pub, Function<T, T> f){
+//        return new Publisher<T>() {
+//            @Override
+//            public void subscribe(Subscriber<? super T> sub) {
+//                pub.subscribe(new DelegateGenSub<T>(sub){
+//                    @Override
+//                    public void onNext(T t){
+//                        sub.onNext(f.apply(t));
+//                    }
+//                });
+//            }
+//        };
+//    }
+
+    private static <T, R> Publisher<R> mapGen2Pub(Publisher<T> pub, Function<T, R> f){
+        return new Publisher<R>() {
             @Override
-            public void subscribe(Subscriber<? super T> sub) {
-                pub.subscribe(new DelegateGenSub<T>(sub){
+            public void subscribe(Subscriber<? super R> sub) {
+                pub.subscribe(new DelegateGen2Sub<T, R>(sub){
                     @Override
                     public void onNext(T t){
                         sub.onNext(f.apply(t));
