@@ -48,12 +48,12 @@ public class PubSubOperators {
     }
 
 
-    private static Publisher<String> reduceGenPub(Publisher<Integer> pub, String init,
-                                                  BiFunction<String, Integer, String> bf) {
-        return sub -> pub.subscribe(new DelegateGen2Sub<Integer,String>(sub){
-            String result = init;
+    private static <T,R> Publisher<R> reduceGenPub(Publisher<T> pub, R init,
+                                                  BiFunction<R, T, R> bf) {
+        return sub -> pub.subscribe(new DelegateGen2Sub<T,R>(sub){
+            R result = init;
             @Override
-            public void onNext(Integer i){
+            public void onNext(T i){
                 result = bf.apply(result, i);
             }
 
