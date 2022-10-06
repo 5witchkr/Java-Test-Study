@@ -35,24 +35,19 @@ public class PubSubOperators {
     }
 
     private static Publisher<Integer> reducePub(Publisher<Integer> pub, int init, BiFunction<Integer, Integer, Integer> bf) {
-        return new Publisher<Integer>() {
+        return sub -> pub.subscribe(new DelegateSub(sub){
+            int result = init;
             @Override
-            public void subscribe(Subscriber<? super Integer> sub) {
-                pub.subscribe(new DelegateSub(sub){
-                    int result = init;
-                    @Override
-                    public void onNext(Integer i){
-                        result = bf.apply(result, i);
-                    }
-
-                    @Override
-                    public void onComplete(){
-                        sub.onNext(result);
-                        sub.onComplete();
-                    }
-                });
+            public void onNext(Integer i){
+                result = bf.apply(result, i);
             }
-        };
+
+            @Override
+            public void onComplete(){
+                sub.onNext(result);
+                sub.onComplete();
+            }
+        });
     }
 
 
