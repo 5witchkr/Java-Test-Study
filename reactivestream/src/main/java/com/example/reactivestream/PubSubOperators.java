@@ -14,6 +14,7 @@ import java.util.stream.Stream;
  * flow: Publisher -> [Data1] -> Operator1 -> [Data2] -> Operator2 -> [Data3] -> Subscriber
  *
  * 1. map (d1 -> f -> d2)
+ * 2. sum
  */
 @Slf4j
 public class PubSubOperators {
@@ -25,7 +26,30 @@ public class PubSubOperators {
 
         Publisher<Integer> map2Pub = mapPub(mapPub, (Function<Integer, Integer>) s -> -s);
 
-        map2Pub.subscribe(logSub());
+        Publisher<Integer> sumPub = sumPub(map2Pub);
+
+        sumPub.subscribe(logSub());
+    }
+
+    private static Publisher<Integer> sumPub(Publisher<Integer> pub) {
+        return new Publisher<Integer>() {
+            @Override
+            public void subscribe(Subscriber<? super Integer> sub) {
+                pub.subscribe(new DelegateSub(sub){
+                    int sum = 0;
+                    @Override
+                    public void onNext(Integer i){
+                        sum += i;
+                    }
+
+                    @Override
+                    public void onComplete(){
+                        sub.onNext(sum);
+                        sub.onComplete();
+                    }
+                });
+            }
+        };
     }
 
     private static Publisher<Integer> mapPub(Publisher<Integer> pub, Function<Integer, Integer> fun) {
