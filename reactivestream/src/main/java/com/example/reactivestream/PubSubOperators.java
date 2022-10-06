@@ -6,11 +6,14 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * flow: Publisher -> [Data1] -> Operator1 -> [Data2] -> Operator2 -> [Data3] -> Subscriber
+ *
+ * 1. map (d1 -> f -> d2)
  */
 @Slf4j
 public class PubSubOperators {
@@ -18,7 +21,18 @@ public class PubSubOperators {
         Publisher<Integer> pub = iterPub(Stream.iterate(1, a -> a + 1).limit(10)
                 .collect(Collectors.toList()));
 
-        pub.subscribe(logSub());
+        Publisher<Integer> mapPub = mapPub(pub, (Function<Integer, Integer>) s -> s * 10);
+
+        mapPub.subscribe(logSub());
+    }
+
+    private static Publisher<Integer> mapPub(Publisher<Integer> pub, Function<Integer, Integer> f) {
+        return new Publisher<Integer>() {
+            @Override
+            public void subscribe(Subscriber<? super Integer> sub) {
+                pub.subscribe(sub);
+            }
+        };
     }
 
     private static Subscriber<Integer> logSub() {
