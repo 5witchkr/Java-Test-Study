@@ -5,6 +5,9 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 @Slf4j
 public class SchedulerEx {
@@ -28,7 +31,8 @@ public class SchedulerEx {
 
         //operator
         Publisher<Integer> subOnPub = sub -> {
-          publisher.subscribe(sub);
+            ExecutorService es = Executors.newSingleThreadExecutor();
+            es.execute(()-> publisher.subscribe(sub));
         };
 
         subOnPub.subscribe(new Subscriber<Integer>() {
