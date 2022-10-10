@@ -57,5 +57,6 @@ public class SchedulerEx {
                 log.debug("onComplete");
             }
         });
+        System.out.println("main thread exit");
     }
 }
