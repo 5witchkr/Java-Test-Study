@@ -5,14 +5,23 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 @Slf4j
 public class IntervalEx {
     public static void main(String[] args) {
         Publisher<Integer> pub = sub -> {
             sub.onSubscribe(new Subscription() {
+                int num = 0;
                 @Override
                 public void request(long n) {
+                    ScheduledExecutorService exce = Executors.newSingleThreadScheduledExecutor();
+                    exce.scheduleAtFixedRate(() -> {
+                        sub.onNext(num++);
+                    }, 0, 300, TimeUnit.MILLISECONDS);
                 }
 
                 @Override
