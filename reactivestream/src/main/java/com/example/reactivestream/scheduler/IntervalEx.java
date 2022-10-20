@@ -16,22 +16,56 @@ public class IntervalEx {
         Publisher<Integer> pub = sub -> {
             sub.onSubscribe(new Subscription() {
                 int num = 0;
+                volatile boolean cancelled = false;
                 @Override
                 public void request(long n) {
-                    ScheduledExecutorService exce = Executors.newSingleThreadScheduledExecutor();
-                    exce.scheduleAtFixedRate(() -> {
+                    ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+                    exec.scheduleAtFixedRate(() -> {
+                        if (cancelled){
+                            exec.shutdown();
+                        }
                         sub.onNext(num++);
                     }, 0, 300, TimeUnit.MILLISECONDS);
                 }
 
                 @Override
                 public void cancel() {
-
+                    cancelled = true;
                 }
             });
         };
 
-        pub.subscribe(new Subscriber<Integer>() {
+        //take operator 구현
+        Publisher<Integer> takePub = sub -> {
+            pub.subscribe(new Subscriber<Integer>() {
+                int count = 0;
+                Subscription subscription;
+                @Override
+                public void onSubscribe(Subscription s) {
+                    sub.onSubscribe(s);
+                }
+
+                @Override
+                public void onNext(Integer integer) {
+                    sub.onNext(integer);
+                    if (++count > 10) {
+                        subscription.cancel();
+                    }
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    sub.onError(t);
+                }
+
+                @Override
+                public void onComplete() {
+                    sub.onComplete();
+                }
+            });
+        };
+
+        takePub.subscribe(new Subscriber<Integer>() {
             @Override
             public void onSubscribe(Subscription s) {
                 log.debug("onSubscribe");
