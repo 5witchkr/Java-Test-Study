@@ -30,22 +30,22 @@ public class SchedulerEx {
                 }
             });
         };
-
-        //operator -> thread-1
-        //CustomizableThreadFactory threadNamePrefix
-        Publisher<Integer> subOnPub = sub -> {
-            ExecutorService es = Executors.newSingleThreadExecutor(new CustomizableThreadFactory(){
-                @Override
-                public String getThreadNamePrefix(){
-                    return "nameFix-subOn-";
-                }
-            });
-            es.execute(()-> publisher.subscribe(sub));
-        };
+//
+//        //operator -> thread-1
+//        //CustomizableThreadFactory threadNamePrefix
+//        Publisher<Integer> subOnPub = sub -> {
+//            ExecutorService es = Executors.newSingleThreadExecutor(new CustomizableThreadFactory(){
+//                @Override
+//                public String getThreadNamePrefix(){
+//                    return "nameFix-subOn-";
+//                }
+//            });
+//            es.execute(()-> publisher.subscribe(sub));
+//        };
 
         //PublishOn -> thread-2
         Publisher<Integer> pubOnPub = sub -> {
-            subOnPub.subscribe(new Subscriber<Integer>() {
+            publisher.subscribe(new Subscriber<Integer>() {
                 ExecutorService es = Executors.newSingleThreadExecutor(new CustomizableThreadFactory(){
                     @Override
                     public String getThreadNamePrefix(){
@@ -65,11 +65,13 @@ public class SchedulerEx {
                 @Override
                 public void onError(Throwable t) {
                     es.execute(() -> sub.onError(t));
+                    es.shutdown();
                 }
 
                 @Override
                 public void onComplete() {
                     es.execute(() -> sub.onComplete());
+                    es.shutdown();
                 }
             });
         };
