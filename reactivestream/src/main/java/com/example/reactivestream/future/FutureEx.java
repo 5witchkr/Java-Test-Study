@@ -21,6 +21,12 @@ public class FutureEx {
             return "Hello";
         });
 
+        //isDone = 작업이 다 됐는지 확인함
+        log.info(String.valueOf(f.isDone()));
+        Thread.sleep(2100);
+        log.info("Task");
+        log.info(String.valueOf(f.isDone()));
+
         //Future.get()은 결과가 올때까지 Blocking 됨
         log.info(f.get());
         log.info("Exit");
