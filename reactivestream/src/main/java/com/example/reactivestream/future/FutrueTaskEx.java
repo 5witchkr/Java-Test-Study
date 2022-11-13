@@ -13,16 +13,18 @@ public class FutrueTaskEx {
             Thread.sleep(2000);
             log.info("Async");
             return "Hello";
-        });
+        }) {
+            @Override
+            protected void done() {
+                try {
+                    log.info(get());
+                } catch (ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
 
         es.execute(ft);
-
-        log.info(String.valueOf(ft.isDone()));
-        Thread.sleep(2100);
-        log.info("Task");
-        log.info(String.valueOf(ft.isDone()));
-
-        log.info(ft.get());
-        log.info("Exit");
+        es.shutdown();
     }
 }
